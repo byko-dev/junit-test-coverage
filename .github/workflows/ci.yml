@@ -26,6 +26,19 @@ jobs:
       - name: Generate JaCoCo Coverage Report
         run: mvn jacoco:report
 
+      - name: Print Maven Project Info
+        run: |
+          ARTIFACT_ID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          PACKAGE_PATH="target/$ARTIFACT_ID-$VERSION.jar"
+          echo "::notice title=Maven Package Info::Artifact ID: $ARTIFACT_ID, Version: $VERSION, Package: $PACKAGE_PATH"
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: maven-build
+          path: target/*.jar
+
       - name: Upload JaCoCo Report
         uses: actions/upload-artifact@v4
         with:
